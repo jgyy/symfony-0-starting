@@ -22,7 +22,7 @@ $html = '<!-- python3 -m http.server 8080 -->
 <head>
     <title>Periodic Table</title>
     <style>
-        table { 
+        table {
             border-collapse: collapse;
             margin: 20px;
             font-family: Arial, sans-serif;
@@ -65,11 +65,10 @@ foreach ($elements as $element) {
     $row = floor($element['number'] / 18);
     if ($element['number'] > 56 && $element['number'] < 72) continue;
     if ($element['number'] > 88 && $element['number'] < 104) continue;
-    
-    // Adjust row for elements after gaps
+
     if ($element['number'] >= 72) $row = 5;
     if ($element['number'] >= 104) $row = 6;
-    
+
     $table[$row][$element['position']] = $element;
 }
 
@@ -80,7 +79,7 @@ for ($row = 0; $row < $maxRows; $row++) {
             $html .= '<td class="empty"></td>';
             continue;
         }
-        
+
         $element = $table[$row][$col];
         $html .= '<td class="element">
             <h4>' . htmlspecialchars($element['name']) . '</h4>
