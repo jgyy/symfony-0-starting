@@ -61,34 +61,56 @@ $maxCols = 18;
 $table = array_fill(0, $maxRows, array_fill(0, $maxCols, null));
 
 foreach ($elements as $element) {
-    $row = floor($element['number'] / 18);
-    if ($element['number'] > 56 && $element['number'] < 72) continue;
-    if ($element['number'] > 88 && $element['number'] < 104) continue;
+    $row = null;
+    $col = $element['position'];
+    $num = $element['number'];
+    
+    if ($num <= 2) {
+        $row = 0;
+    }
+    else if ($num <= 10) {
+        $row = 1;
+    }
+    else if ($num <= 18) {
+        $row = 2;
+    }
+    else if ($num <= 36) {
+        $row = 3;
+    }
+    else if ($num <= 54) {
+        $row = 4;
+    }
+    else if ($num <= 86) {
+        $row = 5;
+        if ($num > 57 && $num < 72) continue;
+    }
+    else {
+        $row = 6;
+        if ($num > 89 && $num < 104) continue;
+    }
 
-    if ($element['number'] >= 72) $row = 5;
-    if ($element['number'] >= 104) $row = 6;
-
-    $table[$row][$element['position']] = $element;
+    if ($row !== null) {
+        $table[$row][$col] = $element;
+    }
 }
 
 for ($row = 0; $row < $maxRows; $row++) {
     $html .= '<tr>';
     for ($col = 0; $col < $maxCols; $col++) {
-        if ($table[$row][$col] === null) {
+        if (isset($table[$row][$col])) {
+            $element = $table[$row][$col];
+            $html .= '<td class="element">
+                <h4>' . htmlspecialchars($element['name']) . '</h4>
+                <ul>
+                    <li>No ' . $element['number'] . '</li>
+                    <li>' . htmlspecialchars($element['symbol']) . '</li>
+                    <li>' . $element['molar'] . '</li>
+                    <li>' . $element['electron'] . ' electron</li>
+                </ul>
+            </td>';
+        } else {
             $html .= '<td class="empty"></td>';
-            continue;
         }
-
-        $element = $table[$row][$col];
-        $html .= '<td class="element">
-            <h4>' . htmlspecialchars($element['name']) . '</h4>
-            <ul>
-                <li>No ' . $element['number'] . '</li>
-                <li>' . htmlspecialchars($element['symbol']) . '</li>
-                <li>' . $element['molar'] . '</li>
-                <li>' . $element['electron'] . ' electron</li>
-            </ul>
-        </td>';
     }
     $html .= '</tr>';
 }
