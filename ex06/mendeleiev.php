@@ -131,7 +131,130 @@ $html .= '</table></body></html>';
 file_put_contents('mendeleiev.html', $html);
 
 /*
-#!/usr/bin/env ruby
+def parse_element(line):
+    """Parse a single element line into a dictionary."""
+    name, data = line.strip().split(' = ')
+    properties = {}
+    properties['name'] = name
+    for prop in data.split(', '):
+        key, value = prop.split(':')
+        properties[key] = value
+    return properties
+
+def create_element_cell(element):
+    """Create an HTML table cell for an element."""
+    return f"""    <td class="element">
+        <div class="number">{element['number']}</div>
+        <div class="symbol">{element['small']}</div>
+        <div class="name">{element['name']}</div>
+        <div class="mass">{element['molar']}</div>
+    </td>"""
+
+def generate_periodic_table():
+    """Generate the complete periodic table HTML."""
+    elements = []
+    with open('ex06.txt', 'r') as f:
+        for line in f:
+            elements.append(parse_element(line))
+    grid = [[None for _ in range(18)] for _ in range(10)]
+    for element in elements:
+        position = int(element['position'])
+        row = 0
+        num = int(element['number'])
+        if num <= 2:
+            row = 0
+        elif num <= 10:
+            row = 1
+        elif num <= 18:
+            row = 2
+        elif num <= 36:
+            row = 3
+        elif num <= 54:
+            row = 4
+        elif num <= 86:
+            row = 5
+        elif num <= 118:
+            row = 6
+        grid[row][position] = element
+    html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Periodic Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 2px;
+            margin: 0 auto;
+        }
+        .element {
+            width: 70px;
+            height: 80px;
+            padding: 4px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s;
+            border-radius: 2px;
+            background-color: #d6d6d6;
+        }
+        .element:hover {
+            transform: scale(2);
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .number {
+            font-size: 10px;
+            text-align: left;
+        }
+        .symbol {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+        .name {
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+        .mass {
+            font-size: 9px;
+            color: #666;
+        }
+        .empty {
+            width: 70px;
+            height: 80px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <table>"""
+    for row in grid:
+        if any(row):
+            html += "\n        <tr>"
+            for element in row:
+                if element:
+                    html += "\n" + create_element_cell(element)
+                else:
+                    html += '\n            <td class="empty"></td>'
+            html += "\n        </tr>"
+    html += """
+    </table>
+</body>
+</html>"""
+    with open('periodic_table.html', 'w') as f:
+        f.write(html)
+
+if __name__ == '__main__':
+    generate_periodic_table()
+*/
+
+/*
+#!/usr/bin/env -S ruby -w
 
 def parse_element(line)
     name, attributes = line.split(' = ')
@@ -159,7 +282,8 @@ def create_empty_cell
 end
 
 def generate_periodic_table
-    elements = File.readlines('ex06.txt').map { |line| parse_element(line.chomp) }
+    elements = File.readlines('periodic_table.txt').map { |line| parse_element(line.chomp) }
+    # python3 -m http.server 8080
     html = <<~HTML
         <!DOCTYPE html>
         <html lang="en">
@@ -239,10 +363,9 @@ def generate_periodic_table
         </body>
         </html>
     HTML
-    File.write('mendeleiev.html', html)
+    File.write('periodic_table.html', html)
 end
 
 generate_periodic_table
 */
-
 ?>
